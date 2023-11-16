@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 	String s1 = String("Hello");
 	String s2 = String("World");
 	String s3 = s1 + s2;
-	String s4 = String(6454);
+	String s4 = String(-2055);
 
 #if DEBUG
 	std::cout << s1 << std::endl;
@@ -18,8 +18,6 @@ int main(int argc, char** argv)
 	std::cout << (s1 > s3) << std::endl;
 	std::cout << (s1 == s3) << std::endl;
 	std::cout << (s1 != s3) << std::endl;
-	std::cout << s1.strcmp(s3) << std::endl;
-
 #endif //DEBUG
 
 	return 0;

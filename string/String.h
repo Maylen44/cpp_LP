@@ -2,20 +2,8 @@
 #define STRING_H
 #include <iostream>
 
-enum StringComparison
-{
-	EQUAL,
-	GREATER,
-	LESSER,
-	ARGUMENT_ERROR
-};
-
 struct String
 {
-	//fields
-	int size;
-	char* buffer;
-
 	//constructors
 	String(); //default
 	String(const char* cString); //transform
@@ -34,7 +22,10 @@ struct String
 	bool operator!=(String& other); //isUnequal
 
 	//methods
-	int strcmp(String& other);
+
+	//fields
+	int size;
+	char* buffer;
 };
 
 //function for printing
