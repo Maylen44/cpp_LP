@@ -1,2 +1,3 @@
 ﻿  String.cpp
+C:\Users\gena_\source\repos\Projekte\string\String.cpp(118): warning C4715: String::operator=: значение возвращается не при всех путях выполнения
   String.vcxproj -> C:\Users\gena_\source\repos\Projekte\string\String\x64\Debug\String.exe

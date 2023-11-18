@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 	String s1 = String("Hello");
 	String s2 = String(" World");
 	String s3 = s1 + s2;
-	String s4 = String(-2055);
+	String s4 = String(0);
 	String s5 = s3;
 
 #if DEBUG
