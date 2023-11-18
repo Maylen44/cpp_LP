@@ -5,15 +5,17 @@
 int main(int argc, char** argv)
 {
 	String s1 = String("Hello");
-	String s2 = String("World");
+	String s2 = String(" World");
 	String s3 = s1 + s2;
 	String s4 = String(-2055);
+	String s5 = s3;
 
 #if DEBUG
 	std::cout << s1 << std::endl;
 	std::cout << s2 << std::endl;
 	std::cout << s3 << std::endl;
 	std::cout << s4 << std::endl;
+	std::cout << s5 << std::endl;
 	std::cout << (s1 < s3) << std::endl;
 	std::cout << (s1 > s3) << std::endl;
 	std::cout << (s1 == s3) << std::endl;

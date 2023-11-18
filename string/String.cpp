@@ -34,24 +34,6 @@ static void copyValue(char* destination, const char* source, int size)
 	}
 }
 
-//copy values from String to a new buffer from String
-static void copyValue(char* destination, char* source, int size)
-{
-	for (int i = 0; i < size; ++i)
-	{
-		destination[i] = source[i];
-	}
-}
-
-//copy values from String to a new buffer from String starting from specified index
-static void copyValue(char* destination, char* source, int size, int startIndex)
-{
-	for (int i = 0; i < size; ++i)
-	{
-		destination[i + startIndex] = source[i];
-	}
-}
-
 //reverse values of a String
 static void reverse(char* origin, int size)
 {
@@ -83,8 +65,6 @@ String::String(const char* cString)
 //constructor transform from int
 String::String(int value)
 {
-	assert(value < 32767 || value > -32767 && "ERROR: trying to pass exceeded value for int data typ range");
-
 	int maxLength = countIntLength(value);
 	bool isNegativ = false;
 	buffer = new char[maxLength];
@@ -118,21 +98,14 @@ String::String(int value)
 //constructor copy
 String::String(const String& other)
 {
-	assert(this != &other || &other != nullptr && "ERROR: trying to construct copy of the same string or trying to acces a nullptr string");
-
 	size = other.size;
 	buffer = new char[other.size];
-	for (int i = 0; i < other.size; ++i)
-	{
-		buffer[i] = other.buffer[i];
-	}
+	copyValue(buffer, other.buffer, size);
 }
 
 //destructor
 String::~String()
 {
-	assert(this != nullptr && "ERROR: trying to deconstruct a nullptr string");
-
 	delete buffer;
 	buffer = nullptr;
 	size = -1;
@@ -157,17 +130,8 @@ String String::operator+(String& other)
 	String string;
 	string.size = size + other.size;
 	string.buffer = new char[string.size];
-	for (int i = 0; i < string.size; ++i)
-	{
-		if (i < size)
-		{
-			copyValue(string.buffer, this->buffer, this->size);
-		}
-		else
-		{
-			copyValue(string.buffer, other.buffer, other.size, this->size);
-		}
-	}
+	copyValue(string.buffer, this->buffer, this->size);
+	copyValue(&string.buffer[this->size], other.buffer, other.size);
 	return string;
 }
 
@@ -177,22 +141,25 @@ bool String::operator<(String& other)
 	assert(this != nullptr || &other != nullptr && "ERROR: trying to acces nullptr string");
 
 	int minLength = (size < other.size) ? size : other.size;
+	bool result = false;
 	for (int i = 0; i < minLength; ++i)
 	{
 		if (buffer[i] < other.buffer[i])
 		{
-			return true;
+			result = true;
+			break;
 		}
 		else if (buffer[i] > other.buffer[i])
 		{
-			return false;
+			result = false;
+			break;
 		}
 	}
 	if (size < other.size)
 	{
-		return true;
+		result = true;
 	}
-	return false;
+	return result;
 }
 
 //operator < for comparing strings
