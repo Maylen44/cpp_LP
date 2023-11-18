@@ -175,11 +175,7 @@ bool String::operator==(String& other)
 {
 	assert(this != nullptr || &other != nullptr && "ERROR: trying to acces nullptr string");
 
-	if (*this < other || *this > other)
-	{
-		return false;
-	}
-	return true;
+	return !(*this < other || *this > other);
 }
 
 //operator != for comparing equality by strings
