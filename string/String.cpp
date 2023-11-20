@@ -57,7 +57,10 @@ String::String(const char* cString)
 {
 	size = getLength(cString);
 	buffer = new char[size];
-	copy(this->buffer, cString, size);
+	if (size > 0)
+	{
+		copy(buffer, cString, size);
+	}
 }
 
 //constructor transform from int
@@ -91,7 +94,10 @@ String::String(const String& other)
 {
 	size = other.size;
 	buffer = new char[other.size];
-	copy(buffer, other.buffer, size);
+	if (size > 0)
+	{
+		copy(buffer, other.buffer, size);
+	}
 }
 
 //destructor
@@ -106,9 +112,9 @@ String::~String()
 }
 
 //operator = for copy/assignment of strings
-String& String::operator=(String& other) //CHECK THIS ONE MORE TIME
+String& String::operator=(String& other)
 {
-	if (size > 0 || this != &other)
+	if (size > 0 || *this != other)
 	{
 		size = other.size;
 		buffer = new char[size];
@@ -123,8 +129,11 @@ String String::operator+(String& other)
 	String string;
 	string.size = size + other.size;
 	string.buffer = new char[string.size];
-	copy(string.buffer, buffer, size);
-	copy(string.buffer + size, other.buffer, other.size);
+	if (string.size > 0)
+	{
+		copy(string.buffer, buffer, size);
+		copy(string.buffer + size, other.buffer, other.size);
+	}
 	return string;
 }
 
@@ -174,8 +183,6 @@ bool String::operator!=(String& other)
 //function for printing
 std::ostream& operator<<(std::ostream& os, String& string)
 {
-	assert(&string != nullptr && "ERROR: Trying to print nullptr string");
-
 	for (int i = 0; i < string.size; ++i)
 	{
 		os << string.buffer[i];

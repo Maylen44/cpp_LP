@@ -9,6 +9,10 @@ int main(int argc, char** argv)
 	String s3 = s1 + s2;
 	String s4 = String(0);
 	String s5 = s3;
+	String s6 = s1;
+	s6 = s6;
+	s6 = s2;
+
 
 #if DEBUG
 	std::cout << s1 << std::endl;
