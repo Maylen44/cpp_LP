@@ -3,10 +3,10 @@
 
 int main(int argc, char** argv)
 {
-
-	Array a1;
-	Array a2(-5);
-	Array a3(a1);
+	Array<int> a1;
+	Array<int> a2(-5);
+	Array<int> a3(a1);
+	Array<const char*> a4;
 
 	for (int i = 0; i < 10; ++i)
 	{
@@ -23,9 +23,19 @@ int main(int argc, char** argv)
 		a3.push(i);
 	}
 
+	a4.push("Ich ");
+	a4.push("sitz ");
+	a4.push("schon ");
+	a4.push("wieder ");
+	a4.push("dicht ");
+	a4.push("in ");
+	a4.push("dem ");
+	a4.push("Flieger.");
+
 	a1.print();
 	a2.print();
 	a3.print();
+	a4.print();
 
 	std::cout << "POP" << std::endl;
 
@@ -44,9 +54,15 @@ int main(int argc, char** argv)
 		a3.pop();
 	}
 
+	for (int i = 0; i < 3; ++i)
+	{
+		a4.pop();
+	}
+
 	a1.print();
 	a2.print();
 	a3.print();
+	a4.print();
 
 	return 0;
 }
