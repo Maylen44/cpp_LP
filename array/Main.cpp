@@ -37,6 +37,9 @@ int main(int argc, char** argv)
 	a3.print();
 	a4.print();
 
+	
+
+
 	std::cout << "POP" << std::endl;
 
 	for(int i = 0; i < 4; ++i)
@@ -63,6 +66,14 @@ int main(int argc, char** argv)
 	a2.print();
 	a3.print();
 	a4.print();
+	
+	
+	while (true)
+	{
+		Array<int> a5 = a2;
+		a5 = a1;
+	}
+	
 
 	return 0;
 }

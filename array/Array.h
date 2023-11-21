@@ -9,16 +9,8 @@ template<typename Type>
 class Array
 {
 public:
-	//constructor default
-	Array()
-	{
-		m_size = 0;
-		m_maxCapacity = m_size;
-		m_buffer = nullptr;
-	}
-
-	//constructor with capacity arg
-	Array(Type capacity)
+	//constructor default and with capacity arg
+	Array(int capacity = 0)
 	{
 		m_size = 0;
 		capacity = (capacity < 0) ? -capacity : capacity;
@@ -55,14 +47,7 @@ public:
 		if (m_size == m_maxCapacity)
 		{
 			increaseMaxCapacity();
-
-			Array newArray(*this);
-			delete m_buffer;
-			m_buffer = new Type[m_maxCapacity];
-			if (m_size > 0)
-			{
-				copyFrom(newArray);
-			}
+			resize();
 		}
 		m_buffer[m_size++] = value;
 	}
@@ -74,14 +59,23 @@ public:
 		if (m_size <= (m_maxCapacity / CAPACITY_FACTOR) && m_size != 0)
 		{
 			decreaseMaxCapacity();
-			Array newArray(*this);
-			delete m_buffer;
-			m_buffer = new Type[m_maxCapacity];
-			copyFrom(newArray);
+			resize();
 		}
 	}
 
-	
+	//assign one array to another one by operator =
+	Array operator=(const Array& origin)
+	{
+		if (origin.m_size > 0)
+		{
+			reallocate(origin.m_maxCapacity);
+			m_maxCapacity = origin.m_maxCapacity;
+			m_size = origin.m_size;
+			copyFrom(origin);
+			return *this;
+		}
+	}
+
 	void print() const;
 	int getSize() const { return m_size; }
 
@@ -93,6 +87,32 @@ private:
 		{
 			m_buffer[i] = origin.m_buffer[i];
 		}
+	}
+
+	//rasize buffer with values intact 
+	void resize()
+	{
+		Type* newBuffer = new Type[m_maxCapacity];
+		for (int i = 0; i < m_size; ++i)
+		{
+			newBuffer[i] = m_buffer[i];
+		}
+		reallocate(m_maxCapacity);
+		for (int i = 0; i < m_size; ++i)
+		{
+			m_buffer[i] = newBuffer[i];
+		}
+		delete newBuffer;
+	}
+
+	//reallocate buffer to a new buffer with cleaning
+	void reallocate(int capacity)
+	{
+		if (m_buffer != nullptr)
+		{
+			delete m_buffer;
+		}
+		m_buffer = new Type[capacity];
 	}
 
 	//increase array max capacity by scale factor
@@ -112,7 +132,6 @@ private:
 	Type* m_buffer;
 };
 
-
 #endif //ARRAY_H
 
 template<typename Type>
@@ -123,12 +142,3 @@ void Array<Type>::print() const
 		std::cout << m_buffer[i] << std::endl;
 	}
 }
-
-/*//function for printing
-	void print() const
-	{
-		for (int i = 0; i < m_size; ++i)
-		{
-			std::cout << m_buffer[i] << std::endl;
-		}
-	}*/
