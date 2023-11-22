@@ -33,16 +33,11 @@ public:
 	//destructor
 	~Array()
 	{
-		if (m_buffer != nullptr)
-		{
-			delete m_buffer;
-			m_buffer = nullptr;
-		}
-		m_size = -1;
+		clear();
 	}
 
 	//adding an element to arrays last element
-	void push(Type value)
+	void addElement(Type value, int destinationIndex = -1)
 	{
 		if (m_size == m_maxCapacity)
 		{
@@ -50,12 +45,31 @@ public:
 			resize();
 		}
 		m_buffer[m_size++] = value;
+
+		if(destinationIndex > -1 && destinationIndex < m_size)
+		{
+			int startIndex = m_size - 1;
+			while (startIndex != destinationIndex)
+			{
+				swap(startIndex);
+				--startIndex;
+			}
+		}
 	}
 
 	//removing arrays last element
-	void pop()
+	void removeElement(int destinationIndex = -1)
 	{
-		m_size = (m_size > 0) ? --m_size : 0;
+		if (destinationIndex > -1 && destinationIndex < m_size)
+		{
+			int startIndex = destinationIndex;
+			while (startIndex != m_size - 1)
+			{
+				swap(-startIndex);
+				++startIndex;
+			}
+		}
+		clear(this, m_size);
 		if (m_size <= (m_maxCapacity / CAPACITY_FACTOR) && m_size != 0)
 		{
 			decreaseMaxCapacity();
@@ -76,16 +90,45 @@ public:
 		}
 	}
 
+	//concatenate two arrays to another one by operator +
+	Array operator+(const Array& rhs)
+	{
+		int newSize = m_size + rhs.m_size;
+		Array<Type> newArray(newSize);
+		newArray.copyFrom(*this, 0);
+		newArray.copyFrom(rhs, m_size);
+		newArray.m_size = newSize - 2;
+		return newArray;
+	}
+
 	void print() const;
 	int getSize() const { return m_size; }
+	int getMaxCapacity() const { return m_maxCapacity; }
+	Type getElement(int destinationIndex) const
+	{
+		if (destinationIndex >= 0 && destinationIndex <= m_size - 1)
+		{
+			return m_buffer[destinationIndex];
+		}
+	}
 
 private:
 	//copy array elements to another array
-	void copyFrom(const Array& origin)
+	void copyFrom(const Array& origin, int startIndex = -1)
 	{
-		for (int i = 0; i < m_size; ++i)
+		if (startIndex > -1)
 		{
-			m_buffer[i] = origin.m_buffer[i];
+			for (int i = 0; i < origin.m_size; ++i)
+			{
+				m_buffer[startIndex + i] = origin.m_buffer[i];
+			}
+		}
+		else
+		{
+			for (int i = 0; i < m_size; ++i)
+			{
+				m_buffer[i] = origin.m_buffer[i];
+			}
 		}
 	}
 
@@ -115,6 +158,30 @@ private:
 		m_buffer = new Type[capacity];
 	}
 
+	//clearing function for whole object, just array values or specified array element (in conjunction with removeElement function)
+	void clear(Array* origin = nullptr, int destinationIndex = -1)
+	{
+		if (origin != nullptr && destinationIndex == -1)
+		{
+			m_size = -1;
+			m_maxCapacity = 0;
+		}
+		else if (origin != nullptr && destinationIndex > -1 && destinationIndex <= m_size)
+		{
+			m_size = (m_size > 0) ? --m_size : 0;
+		}
+		else
+		{
+			if (m_buffer != nullptr)
+			{
+				delete m_buffer;
+				m_buffer = nullptr;
+			}
+			m_size = -1;
+			m_maxCapacity = -1;
+		}
+	}
+
 	//increase array max capacity by scale factor
 	void increaseMaxCapacity()
 	{
@@ -125,6 +192,25 @@ private:
 	void decreaseMaxCapacity()
 	{
 		m_maxCapacity = (m_size == 0) ? 0 : m_maxCapacity / CAPACITY_FACTOR;
+	}
+
+	//value swap for arrays based on int start index
+	void swap(int startIndex)
+	{
+		if (startIndex >= 0)
+		{
+			Type tmp = m_buffer[startIndex];
+			m_buffer[startIndex] = m_buffer[startIndex - 1];
+			m_buffer[startIndex - 1] = tmp;
+		}
+		else
+		{
+			startIndex = -startIndex;
+			Type tmp = m_buffer[startIndex];
+			m_buffer[startIndex] = m_buffer[startIndex + 1];
+			m_buffer[startIndex + 1] = tmp;
+		}
+		
 	}
 
 	int m_size;
