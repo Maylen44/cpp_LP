@@ -1,21 +1,24 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 #include <iostream>
+#include <cassert>
 
 const int CAPACITY_FACTOR = 2;
 
-template<typename Type>
-
-class Array
+template<typename Type> class Array
 {
 public:
 	//constructor default and with capacity arg
 	Array(int capacity = 0)
 	{
+		assert(capacity >= 0 & "ff");
+
 		m_size = 0;
-		capacity = (capacity < 0) ? -capacity : capacity;
 		m_maxCapacity = capacity;
-		m_buffer = new Type[m_maxCapacity];
+		if (m_maxCapacity > 0)
+		{
+			m_buffer = new Type[m_maxCapacity];
+		}
 		++m_count;
 	}
 
@@ -24,10 +27,13 @@ public:
 	{
 		m_size = origin.m_size;
 		m_maxCapacity = origin.m_maxCapacity;
-		m_buffer = new Type[m_maxCapacity];
-		if (m_size > 0)
+		if (m_maxCapacity > 0)
 		{
-			copyFrom(origin);
+			m_buffer = new Type[m_maxCapacity];
+			if (m_size > 0)
+			{
+				copyFrom(origin);
+			}
 		}
 		++m_count;
 	}
@@ -54,7 +60,7 @@ public:
 			int startIndex = m_size - 1;
 			while (startIndex != destinationIndex)
 			{
-				swap(startIndex);
+				swap(startIndex); //func shift(start index, how much to shift) ~ array concat
 				--startIndex;
 			}
 		}
@@ -68,7 +74,7 @@ public:
 			int startIndex = destinationIndex;
 			while (startIndex != m_size - 1)
 			{
-				swap(-startIndex);
+				swap(-startIndex);//shift
 				++startIndex;
 			}
 		}
@@ -98,9 +104,12 @@ public:
 	{
 		int newSize = m_size + rhs.m_size;
 		Array<Type> newArray(newSize);
-		newArray.copyFrom(*this, 0);
-		newArray.copyFrom(rhs, m_size);
-		newArray.m_size = newSize - 2;
+		if (newSize > 0)
+		{
+			newArray.copyFrom(*this, 0);
+			newArray.copyFrom(rhs, m_size);
+			newArray.m_size = newSize - 2;
+		}
 		return newArray;
 	}
 
@@ -109,36 +118,28 @@ public:
 	int getMaxCapacity() const { return m_maxCapacity; }
 	Type getElement(int destinationIndex) const
 	{
-		if (destinationIndex >= 0 && destinationIndex <= m_size - 1)
-		{
-			return m_buffer[destinationIndex];
-		}
+		assert(destinationIndex >= 0 && destinationIndex <= m_size - 1 && "ddd");
+
+		return m_buffer[destinationIndex];
 	}
 
 private:
 	//copy array elements to another array
-	void copyFrom(const Array& origin, int startIndex = -1)
+	void copyFrom(const Array& origin, int startIndex = 0)
 	{
-		if (startIndex > -1)
+		assert(startIndex < origin.m_size && "fff");
+
+		for (int i = 0; i < m_size; ++i)
 		{
-			for (int i = 0; i < origin.m_size; ++i)
-			{
-				m_buffer[startIndex + i] = origin.m_buffer[i];
-			}
+			m_buffer[i] = origin.m_buffer[i];
 		}
-		else
-		{
-			for (int i = 0; i < m_size; ++i)
-			{
-				m_buffer[i] = origin.m_buffer[i];
-			}
-		}
+		//add resize if i copy more elements in smaller array
 	}
 
 	//rasize buffer with values intact 
-	void resize()
+	void resize() // add wanted size and reduce other functions
 	{
-		Type* newBuffer = new Type[m_maxCapacity];
+		Type* newBuffer = new Type[m_maxCapacity];//check for maxCapacity > 0
 		for (int i = 0; i < m_size; ++i)
 		{
 			newBuffer[i] = m_buffer[i];
@@ -152,7 +153,7 @@ private:
 	}
 
 	//reallocate buffer to a new buffer with cleaning
-	void reallocate(int capacity)
+	void reallocate(int capacity) //add resize function here and increase decreas capacity
 	{
 		if (m_buffer != nullptr)
 		{
@@ -162,7 +163,7 @@ private:
 	}
 
 	//clearing function for whole object, just array values or specified array element (in conjunction with removeElement function)
-	void clear(Array* origin = nullptr, int destinationIndex = -1)
+	void clear(Array* origin = nullptr, int destinationIndex = -1) //naming index change to bool lastElement? better move into resize function
 	{
 		if (origin != nullptr && destinationIndex == -1)
 		{
@@ -186,19 +187,19 @@ private:
 	}
 
 	//increase array max capacity by scale factor
-	void increaseMaxCapacity()
+	void increaseMaxCapacity()//add this functions to reallocate
 	{
 		m_maxCapacity = (m_size == 0) ? (1 + m_maxCapacity) * CAPACITY_FACTOR : m_maxCapacity * CAPACITY_FACTOR;
 	}
 
 	//decrease array max capacity by scale factor
-	void decreaseMaxCapacity()
+	void decreaseMaxCapacity()//add this functions to reallocate
 	{
 		m_maxCapacity = (m_size == 0) ? 0 : m_maxCapacity / CAPACITY_FACTOR;
 	}
 
 	//value swap for arrays based on int start index
-	void swap(int startIndex)
+	void swap(int startIndex)// change to shift
 	{
 		if (startIndex >= 0)
 		{
@@ -213,7 +214,6 @@ private:
 			m_buffer[startIndex] = m_buffer[startIndex + 1];
 			m_buffer[startIndex + 1] = tmp;
 		}
-		
 	}
 
 	int m_size;
