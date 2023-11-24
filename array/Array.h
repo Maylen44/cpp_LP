@@ -16,6 +16,7 @@ public:
 		capacity = (capacity < 0) ? -capacity : capacity;
 		m_maxCapacity = capacity;
 		m_buffer = new Type[m_maxCapacity];
+		++m_count;
 	}
 
 	//constructor copy
@@ -28,12 +29,14 @@ public:
 		{
 			copyFrom(origin);
 		}
+		++m_count;
 	}
 
 	//destructor
 	~Array()
 	{
 		clear();
+		--m_count;
 	}
 
 	//adding an element to arrays last element

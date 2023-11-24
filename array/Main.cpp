@@ -8,7 +8,6 @@ int main(int argc, char** argv)
 	Array<int> a3(a1);
 	Array<const char*> a4;
 
-
 	for (int i = 0; i < 10; ++i)
 	{
 		a1.addElement(i);
@@ -73,15 +72,17 @@ int main(int argc, char** argv)
 	a4.print();
 	a5.print();
 
-	while (true)
+	/*while (true)
 	{
-		/*Array<int> a5 = a2;
+		Array<int> a5 = a2;
 		a5 = a1;
-		*/
+		
 
 		Array<int> a6 = a1 + a2;
+		a6.print();
 
-	}
+		
+	}*/
 
 	return 0;
 }
