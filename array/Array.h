@@ -11,7 +11,7 @@ public:
 	//constructor default and with capacity arg
 	Array(int capacity = 0)
 	{
-		assert(capacity >= 0 & "ff");
+		assert(capacity >= 0 && "ERROR: Initializing a new array with negativ capacity.");
 
 		m_size = 0;
 		m_maxCapacity = capacity;
@@ -19,30 +19,27 @@ public:
 		{
 			m_buffer = new Type[m_maxCapacity];
 		}
-		++m_count;
 	}
 
 	//constructor copy
 	Array(const Array& origin)
 	{
-		m_size = origin.m_size;
-		m_maxCapacity = origin.m_maxCapacity;
-		if (m_maxCapacity > 0)
+		if (origin.m_maxCapacity > 0 && origin.m_size > 0)
 		{
-			m_buffer = new Type[m_maxCapacity];
-			if (m_size > 0)
-			{
-				copyFrom(origin);
-			}
+			copyFrom(origin);
 		}
-		++m_count;
 	}
 
 	//destructor
 	~Array()
 	{
-		clear();
-		--m_count;
+		if (m_buffer != nullptr)
+		{
+			delete m_buffer;
+			m_buffer = nullptr;
+		}
+		m_size = -1;
+		m_maxCapacity = -1;
 	}
 
 	//adding an element to arrays last element
@@ -50,8 +47,7 @@ public:
 	{
 		if (m_size == m_maxCapacity)
 		{
-			increaseMaxCapacity();
-			resize();
+			resize(m_maxCapacity);
 		}
 		m_buffer[m_size++] = value;
 
@@ -78,11 +74,10 @@ public:
 				++startIndex;
 			}
 		}
-		clear(this, m_size);
+		m_size = (m_size > 0) ? --m_size : m_size;
 		if (m_size <= (m_maxCapacity / CAPACITY_FACTOR) && m_size != 0)
 		{
-			decreaseMaxCapacity();
-			resize();
+			resize(m_maxCapacity);
 		}
 	}
 
@@ -91,9 +86,6 @@ public:
 	{
 		if (origin.m_size > 0)
 		{
-			reallocate(origin.m_maxCapacity);
-			m_maxCapacity = origin.m_maxCapacity;
-			m_size = origin.m_size;
 			copyFrom(origin);
 			return *this;
 		}
@@ -108,7 +100,6 @@ public:
 		{
 			newArray.copyFrom(*this, 0);
 			newArray.copyFrom(rhs, m_size);
-			newArray.m_size = newSize - 2;
 		}
 		return newArray;
 	}
@@ -118,84 +109,66 @@ public:
 	int getMaxCapacity() const { return m_maxCapacity; }
 	Type getElement(int destinationIndex) const
 	{
-		assert(destinationIndex >= 0 && destinationIndex <= m_size - 1 && "ddd");
+		assert(destinationIndex >= 0 && destinationIndex <= m_size - 1 && "ERROR: Trying to acces element on invalid index.");
 
 		return m_buffer[destinationIndex];
 	}
 
 private:
-	//copy array elements to another array
 	void copyFrom(const Array& origin, int startIndex = 0)
 	{
-		assert(startIndex < origin.m_size && "fff");
+		assert(startIndex <= m_size && startIndex >= 0 && "ERROR: Trying to copy an Array via boundaries invalid index.");
 
-		for (int i = 0; i < m_size; ++i)
+		int requiredCapacity = origin.m_size + startIndex;
+		if (m_maxCapacity <= requiredCapacity)
 		{
-			m_buffer[i] = origin.m_buffer[i];
+			resize(requiredCapacity);
 		}
-		//add resize if i copy more elements in smaller array
+		for (int i = 0; i < origin.m_size; ++i)
+		{
+			m_buffer[startIndex] = origin.m_buffer[i];
+			++startIndex;
+			++m_size;
+		}
 	}
 
-	//rasize buffer with values intact 
-	void resize() // add wanted size and reduce other functions
+	void resize(int wantedSize)
 	{
-		Type* newBuffer = new Type[m_maxCapacity];//check for maxCapacity > 0
-		for (int i = 0; i < m_size; ++i)
+		if (m_size == wantedSize)
 		{
-			newBuffer[i] = m_buffer[i];
+			m_maxCapacity = (m_size == 0) ? (1 + m_maxCapacity) * CAPACITY_FACTOR : m_maxCapacity * CAPACITY_FACTOR;
 		}
-		reallocate(m_maxCapacity);
-		for (int i = 0; i < m_size; ++i)
+		else if (m_size <= (wantedSize / CAPACITY_FACTOR) && m_size != 0)
 		{
-			m_buffer[i] = newBuffer[i];
-		}
-		delete newBuffer;
-	}
-
-	//reallocate buffer to a new buffer with cleaning
-	void reallocate(int capacity) //add resize function here and increase decreas capacity
-	{
-		if (m_buffer != nullptr)
-		{
-			delete m_buffer;
-		}
-		m_buffer = new Type[capacity];
-	}
-
-	//clearing function for whole object, just array values or specified array element (in conjunction with removeElement function)
-	void clear(Array* origin = nullptr, int destinationIndex = -1) //naming index change to bool lastElement? better move into resize function
-	{
-		if (origin != nullptr && destinationIndex == -1)
-		{
-			m_size = -1;
-			m_maxCapacity = 0;
-		}
-		else if (origin != nullptr && destinationIndex > -1 && destinationIndex <= m_size)
-		{
-			m_size = (m_size > 0) ? --m_size : 0;
+			m_maxCapacity = m_maxCapacity / CAPACITY_FACTOR;
 		}
 		else
 		{
+			m_maxCapacity = wantedSize;
+		}
+		reallocate(m_maxCapacity);
+	}
+
+	void reallocate(int capacity)
+	{
+		if (capacity > 0)
+		{
+			Type* newBuffer = new Type[capacity];
 			if (m_buffer != nullptr)
 			{
+				for (int i = 0; i < capacity; ++i)
+				{
+					newBuffer[i] = m_buffer[i];
+				}
 				delete m_buffer;
-				m_buffer = nullptr;
 			}
-			m_size = -1;
-			m_maxCapacity = -1;
+			m_buffer = new Type[capacity];
+			for (int i = 0; i < capacity; ++i)
+			{
+				m_buffer[i] = newBuffer[i];
+			}
+			delete newBuffer;
 		}
-	}
-
-	//increase array max capacity by scale factor
-	void increaseMaxCapacity()//add this functions to reallocate
-	{
-		m_maxCapacity = (m_size == 0) ? (1 + m_maxCapacity) * CAPACITY_FACTOR : m_maxCapacity * CAPACITY_FACTOR;
-	}
-
-	//decrease array max capacity by scale factor
-	void decreaseMaxCapacity()//add this functions to reallocate
-	{
-		m_maxCapacity = (m_size == 0) ? 0 : m_maxCapacity / CAPACITY_FACTOR;
 	}
 
 	//value swap for arrays based on int start index
