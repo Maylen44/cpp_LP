@@ -1,6 +1,5 @@
 #ifndef ARRAY_H
 #define ARRAY_H
-#include <iostream>
 #include <cassert>
 
 const int CAPACITY_FACTOR = 2;
@@ -8,20 +7,18 @@ const int CAPACITY_FACTOR = 2;
 template<typename Type> class Array
 {
 public:
-	//constructor default and with capacity arg
 	Array(int capacity = 0)
+	: m_maxCapacity(capacity)
+	, m_size(0)
 	{
 		assert(capacity >= 0 && "ERROR: Initializing a new array with negativ capacity.");
 
-		m_size = 0;
-		m_maxCapacity = capacity;
 		if (m_maxCapacity > 0)
 		{
 			m_buffer = new Type[m_maxCapacity];
 		}
 	}
 
-	//constructor copy
 	Array(const Array& origin)
 	{
 		if (origin.m_maxCapacity > 0 && origin.m_size > 0)
@@ -30,7 +27,6 @@ public:
 		}
 	}
 
-	//destructor
 	~Array()
 	{
 		if (m_buffer != nullptr)
@@ -42,7 +38,6 @@ public:
 		m_maxCapacity = -1;
 	}
 
-	//adding an element to arrays last element
 	void addElement(Type value, int destinationIndex = -1)
 	{
 		if (m_size == m_maxCapacity)
@@ -53,26 +48,15 @@ public:
 
 		if(destinationIndex > -1 && destinationIndex < m_size)
 		{
-			int startIndex = m_size - 1;
-			while (startIndex != destinationIndex)
-			{
-				swap(startIndex); //func shift(start index, how much to shift) ~ array concat
-				--startIndex;
-			}
+			shift(m_size - 1, destinationIndex);
 		}
 	}
 
-	//removing arrays last element
 	void removeElement(int destinationIndex = -1)
 	{
 		if (destinationIndex > -1 && destinationIndex < m_size)
 		{
-			int startIndex = destinationIndex;
-			while (startIndex != m_size - 1)
-			{
-				swap(-startIndex);//shift
-				++startIndex;
-			}
+			shift(destinationIndex, m_size - 1);
 		}
 		m_size = (m_size > 0) ? --m_size : m_size;
 		if (m_size <= (m_maxCapacity / CAPACITY_FACTOR) && m_size != 0)
@@ -81,22 +65,20 @@ public:
 		}
 	}
 
-	//assign one array to another one by operator =
-	Array operator=(const Array& origin)
+	Array& operator=(const Array& origin)
 	{
 		if (origin.m_size > 0)
 		{
+			m_size = 0;
 			copyFrom(origin);
-			return *this;
 		}
+		return *this;
 	}
 
-	//concatenate two arrays to another one by operator +
-	Array operator+(const Array& rhs)
+	Array& operator+(const Array& rhs)
 	{
-		int newSize = m_size + rhs.m_size;
-		Array<Type> newArray(newSize);
-		if (newSize > 0)
+		Array<Type> newArray(m_size + rhs.m_size);
+		if ((m_size + rhs.m_size) > 0)
 		{
 			newArray.copyFrom(*this, 0);
 			newArray.copyFrom(rhs, m_size);
@@ -162,45 +144,43 @@ private:
 				}
 				delete m_buffer;
 			}
-			m_buffer = new Type[capacity];
-			for (int i = 0; i < capacity; ++i)
-			{
-				m_buffer[i] = newBuffer[i];
-			}
-			delete newBuffer;
+			m_buffer = newBuffer;
 		}
 	}
 
-	//value swap for arrays based on int start index
-	void swap(int startIndex)// change to shift
+	void shift(int startIndex, int destinationIndex)
 	{
-		if (startIndex >= 0)
+		if (startIndex >= 0 && startIndex != destinationIndex)
 		{
-			Type tmp = m_buffer[startIndex];
-			m_buffer[startIndex] = m_buffer[startIndex - 1];
-			m_buffer[startIndex - 1] = tmp;
-		}
-		else
-		{
-			startIndex = -startIndex;
-			Type tmp = m_buffer[startIndex];
-			m_buffer[startIndex] = m_buffer[startIndex + 1];
-			m_buffer[startIndex + 1] = tmp;
+			if (startIndex > destinationIndex)
+			{
+				assert(startIndex < m_size && "ERROR: Trying to access element on invalid index");
+
+				for (int i = startIndex; i > destinationIndex; --i)
+				{
+					Type tmp = m_buffer[i];
+					m_buffer[i] = m_buffer[i - 1];
+					m_buffer[i - 1] = tmp;
+				}
+			}
+			else
+			{
+				assert(destinationIndex < m_size && "ERROR: Trying to access element on invalid index");
+
+				for (int i = startIndex; i < destinationIndex; ++i)
+				{
+					Type tmp = m_buffer[i];
+					m_buffer[i] = m_buffer[i + 1];
+					m_buffer[i + 1] = tmp;
+				}
+			}
 		}
 	}
 
-	int m_size;
+protected:
 	int m_maxCapacity;
+	int m_size;
 	Type* m_buffer;
 };
 
 #endif //ARRAY_H
-
-template<typename Type>
-void Array<Type>::print() const
-{
-	for (int i = 0; i < m_size; ++i)
-	{
-		std::cout << m_buffer[i] << std::endl;
-	}
-}

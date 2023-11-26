@@ -1,3 +1,2 @@
 ﻿  Main.cpp
-C:\Users\gena_\source\repos\Projekte\array\Array.h(92): warning C4715: Array<int>::operator=: значение возвращается не при всех путях выполнения
   Array.vcxproj -> C:\Users\gena_\source\repos\Projekte\array\Array\x64\Debug\Array.exe
