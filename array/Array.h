@@ -48,7 +48,7 @@ public:
 
 		if(destinationIndex > -1 && destinationIndex < m_size)
 		{
-			shift(m_size - 1, destinationIndex);
+			swap(m_size - 1, destinationIndex);
 		}
 	}
 
@@ -56,14 +56,104 @@ public:
 	{
 		if (destinationIndex > -1 && destinationIndex < m_size)
 		{
-			shift(destinationIndex, m_size - 1);
+			swap(destinationIndex, m_size - 1);
 		}
 		m_size = (m_size > 0) ? --m_size : m_size;
-		if (m_size <= (m_maxCapacity / CAPACITY_FACTOR) && m_size != 0)
+	}
+
+	void shift(int startIndex, int numOfElements, int offset)
+	{
+		//var 1: increase bunduries of array
+		/*
+		if (startIndex >= 0 && startIndex < m_size && offset != 0 && numOfElements > 0)
 		{
-			resize(m_maxCapacity);
+			if (offset > 0)
+			{
+				int neededCapacity = startIndex + numOfElements + offset;
+				if (neededCapacity > m_maxCapacity)
+				{
+					resize(neededCapacity);
+				}
+				for (int i = numOfElements - 1; i >= 0; --i)
+				{
+					m_buffer[startIndex + i + offset] = m_buffer[startIndex + i];
+				}
+				m_size = (m_size < neededCapacity) ? neededCapacity : m_size;
+			}
+			else
+			{
+				int offsetResult = startIndex + offset;
+				if (offsetResult < 0)
+				{
+					offsetResult = -offsetResult;
+					resize(m_maxCapacity + offsetResult);
+					shift(0, m_size, offsetResult);
+					startIndex += offsetResult;
+				}
+				for (int i = 0; i < numOfElements; ++i)
+				{
+					m_buffer[startIndex + offset + i] = m_buffer[startIndex + i];
+				}
+			}
+		}
+		*/
+
+		//var 2: overscroll the bunduries of array and start from beginning/end
+		/*
+		if (startIndex >= 0 && startIndex < m_size && offset != 0 && numOfElements > 0)
+		{
+			if (offset > 0)
+			{
+				for (int i = numOfElements - 1; i >= 0; --i)
+				{
+					int offsetResult = startIndex + offset + i - m_size + 1;
+
+					if (offsetResult > 0)
+					{
+						m_buffer[0 + offsetResult - 1] = m_buffer[startIndex + i];
+					}
+					else
+					{
+						m_buffer[startIndex + offset + i] = m_buffer[startIndex + i];
+					}
+					startIndex = ((startIndex + i) < m_size) ? startIndex : 0;
+				}
+			}
+			else
+			{
+				for (int i = 0; i < numOfElements; ++i)
+				{
+					int offsetResult = startIndex + offset;
+					if (offsetResult < 0)
+					{
+						m_buffer[m_size + offsetResult] = m_buffer[startIndex];
+					}
+					else
+					{
+						m_buffer[startIndex + offset] = m_buffer[startIndex];
+					}
+					startIndex++;
+					startIndex = (startIndex < m_size) ? startIndex : 0;
+				}
+			}
+		}
+		*/
+
+		//var 3: dont increase and dont scroll. if its in the bunduries good else dont overwrite trash
+		if (startIndex >= 0 && startIndex < m_size && offset != 0 && numOfElements > 0)
+		{
+			for (int i = numOfElements - 1; i >= 0; --i)
+			{
+				int offsetResult = startIndex + offset + i;
+				if (offsetResult < m_size && offsetResult >= 0)
+				{
+					m_buffer[startIndex + offset + i] = m_buffer[startIndex + i];
+				}
+			}
 		}
 	}
+
+	//add shrinkToFit function
 
 	Array& operator=(const Array& origin)
 	{
@@ -75,7 +165,7 @@ public:
 		return *this;
 	}
 
-	Array& operator+(const Array& rhs)
+	Array operator+(const Array& rhs)
 	{
 		Array<Type> newArray(m_size + rhs.m_size);
 		if ((m_size + rhs.m_size) > 0)
@@ -114,19 +204,15 @@ private:
 		}
 	}
 
-	void resize(int wantedSize)
+	void resize(int wantedCapacity)
 	{
-		if (m_size == wantedSize)
+		if (m_size == wantedCapacity)
 		{
 			m_maxCapacity = (m_size == 0) ? (1 + m_maxCapacity) * CAPACITY_FACTOR : m_maxCapacity * CAPACITY_FACTOR;
 		}
-		else if (m_size <= (wantedSize / CAPACITY_FACTOR) && m_size != 0)
-		{
-			m_maxCapacity = m_maxCapacity / CAPACITY_FACTOR;
-		}
 		else
 		{
-			m_maxCapacity = wantedSize;
+			m_maxCapacity = wantedCapacity;
 		}
 		reallocate(m_maxCapacity);
 	}
@@ -148,7 +234,7 @@ private:
 		}
 	}
 
-	void shift(int startIndex, int destinationIndex)
+	void swap(int startIndex, int destinationIndex)
 	{
 		if (startIndex >= 0 && startIndex != destinationIndex)
 		{
@@ -177,10 +263,18 @@ private:
 		}
 	}
 
-protected:
 	int m_maxCapacity;
 	int m_size;
 	Type* m_buffer;
 };
+
+template<typename Type>
+void Array<Type>::print() const
+{
+	for (int i = 0; i < this->m_size; ++i)
+	{
+		std::cout << this->m_buffer[i] << std::endl;
+	}
+}
 
 #endif //ARRAY_H

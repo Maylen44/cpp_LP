@@ -18,33 +18,18 @@ public:
         this->removeElement();
     }
 
-    Type fetch() { return this->m_buffer[this->m_size]; }
-    int getSize() const { return this->m_size; }
-    int getMaxCapacity() const { return this->m_maxCapacity; }
-    Type getAtIndex(int destinationIndex) const
-    {
-        return this->getElement(destinationIndex);
-    }
+    Type fetch() { return this->getElement(this->getSize()) ; }
 
     void print() const;
 };
 
-#endif // STACK_H
-
 template<typename Type>
 void Stack<Type>::print() const
 {
-    for (int i = 0; i < this->m_size; ++i)
+    for (int i = 0; i < this->getSize(); ++i)
     {
-        std::cout << this->m_buffer[i] << std::endl;
+        std::cout << this->getElement(i) << std::endl;
     }
 }
 
-template<typename Type>
-void Array<Type>::print() const
-{
-    for (int i = 0; i < this->m_size; ++i)
-    {
-        std::cout << this->m_buffer[i] << std::endl;
-    }
-}
+#endif // STACK_H
