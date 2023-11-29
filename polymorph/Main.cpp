@@ -3,7 +3,7 @@
 #include "Weapons.h"
 #include "Armor.h"
 
-void fightingRound(Player* one, Player* two, int round)
+void fightingRound(Character* one, Character* two, int round)
 {
 	std::cout << std::endl;
 	std::cout << "Start of the " << round << " Round!" << std::endl;
@@ -31,8 +31,8 @@ int main(int argc, char** argv)
 	Chainmail m;
 	PlateArmor p;
 
-	Player p1;
-	Player p2;
+	Character p1;
+	Character p2;
 
 	p1.setWeapon(&b);
 	p2.setWeapon(&a);

@@ -4,10 +4,10 @@
 #include "Weapons.h"
 #include "Armor.h"
 
-class Player
+class Character
 {
 public:
-	Player()
+	Character()
 		: m_weapon(nullptr)
 		, m_armor(nullptr)
 		, m_hp(100)
@@ -16,7 +16,7 @@ public:
 		std::cout << "New player Nr " << m_id << " was created." << std::endl;
 	}
 
-	void attack(Player* target)
+	void attack(Character* target)
 	{
 		std::cout << "Player " << m_id << " tryes to attack Player " << target->m_id << std::endl;
 		if (target->m_hp > 0 && m_weapon != nullptr)
@@ -86,6 +86,6 @@ private:
 	static int m_idCount;
 };
 
-int Player::m_idCount = 0;
+int Character::m_idCount = 0;
 
 #endif // CHARACTER_H
