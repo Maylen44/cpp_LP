@@ -23,7 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Armor.h" />
-    <ClInclude Include="..\..\Player.h" />
+    <ClInclude Include="..\..\Character.h" />
     <ClInclude Include="..\..\Weapons.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

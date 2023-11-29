@@ -23,7 +23,7 @@
     <ClInclude Include="..\..\Weapons.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Player.h">
+    <ClInclude Include="..\..\Character.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Armor.h">
