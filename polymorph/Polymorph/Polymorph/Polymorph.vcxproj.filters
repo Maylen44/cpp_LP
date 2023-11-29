@@ -20,10 +20,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Weapons.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Player.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Weapons.h">
+    <ClInclude Include="..\..\Armor.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

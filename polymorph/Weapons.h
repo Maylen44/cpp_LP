@@ -1,42 +1,57 @@
 #ifndef WEAPONS_H
 #define WEAPONS_H
 #include <iostream>
-#include "Player.h"
 
-class Weapons : private Player
+class Weapon
 {
 public:
+	Weapon(int damage) : m_damage(damage) {}
 
+	virtual void attack()
+	{
+		std::cout << "does " << m_damage << " damage" << std::endl;
+	}
+
+	int getDamage() const {	return m_damage; }
 
 private:
 	int m_damage;
 };
 
-class Sword : private Weapons
+class Sword : public Weapon
 {
 public:
+	Sword() : Weapon(10) {}
 
-
-private:
-	int m_damage;
+	void attack()
+	{
+		std::cout << "Sword ";
+		Weapon::attack();
+	}
 };
 
-class Knife : private Weapons
+class Knife : public Weapon
 {
 public:
-
-
-private:
-	int m_damage;
+	Knife() : Weapon(5) {}
+	
+	void attack()
+	{
+		std::cout << "Knife ";
+		Weapon::attack();
+	}
 };
 
-class Axe : private Weapons
+class Axe : public Weapon
 {
 public:
+	Axe() : Weapon(15) {}
 
-
-private:
-	int m_damage;
+	void attack()
+	{
+		std::cout << "Axe ";
+		Weapon::attack();
+	}
 };
 
 #endif // WEAPONS_H
