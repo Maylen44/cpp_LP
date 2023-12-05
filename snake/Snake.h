@@ -1,15 +1,33 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-const float GameWidth = 800.f;
-const float gameHeight = 600.f;
-const sf::Vector2f snakeSize(20.f, 20.f);
-const sf::Vector2f foodSize(20.f, 20.f);
+const sf::Vector2f SNAKE_SIZE = sf::Vector2f(20.f, 20.f);
+const sf::Color SNAKE_FILL_COLOR = sf::Color::Green;
+const float SNAKE_DEFAULT_SPEED = 20.f;
 
+class Snake
+{
+public:
+	Snake();
+	~Snake();
 
+	void changeMoveDirection(sf::Event keyReleased);
+	void move();
+	void resetProgress();
 
-//void restartGame();
+	const sf::RectangleShape getSnake();
+	const sf::Vector2f getPosition();
+	const float getIngameSpeed();
+	const float getSpeedModifier();
 
-sf::Vector2f getRandomCoordinates(const float windowWidth, const float windowHeight, const sf::Vector2f objectSize);
+	void setIngameSnakeSpeed(float addedSpeed);
+
+private:
+	sf::RectangleShape m_snake;
+	float m_ingameSpeed;
+	float m_speedModifier;
+	sf::Vector2f m_movementDirection;
+	sf::Vector2f m_position;
+};
 
 #endif //SNAKE_H
