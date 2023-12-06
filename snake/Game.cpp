@@ -1,137 +1,78 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "Game.h"
 #include "Snake.h"
-#include "SnakeSegments.h"
 #include "Food.h"
-
-
-
-
-static sf::Vector2f getRandomCoordinates(const float windowWidth, const float windowHeight, const sf::Vector2f objectSize)
-{
-    sf::Vector2f position;
-
-    position.x = rand() % int((windowWidth - objectSize.x) / objectSize.x + 1) * objectSize.x;
-    position.y = rand() % int((windowHeight - objectSize.y) / objectSize.y + 1) * objectSize.y;
-
-    return position;
-}
 
 Game::Game()
 	: m_isPlaying(true)
-    , m_game(sf::VideoMode(static_cast<unsigned int>(GAME_WIDTH), static_cast<unsigned int>(GAME_HEIGHT), 32), "SNAKE", sf::Style::Titlebar | sf::Style::Close)
+    , m_window(sf::VideoMode(RESOLUTION.x, RESOLUTION.y), 
+               "SNAKE", 
+               sf::Style::Titlebar | sf::Style::Resize | sf::Style::Close)
 {
-    m_game.setFramerateLimit(GAME_FPS_LIMIT);
+    m_window.setFramerateLimit(FPS_LIMIT);
+    runGame();
 }
 
 Game::~Game()
 {
-
-    
 }
 
 void Game::runGame()
 {
-    Snake s;
-    SnakeSegments ss(s.getSnake());
-    Food f;
-
-    f.setFoodPosition(getRandomCoordinates(GAME_WIDTH, GAME_HEIGHT, FOOD_SIZE));
+    Snake snake;
+    Food food;
     sf::Event event;
 
-    while (m_game.isOpen() && m_isPlaying)
+    while (m_window.isOpen() && m_isPlaying)
     {
-        //check for game start or exit
-        while (m_game.pollEvent(event))
+        //Closing input check
+        while (m_window.pollEvent(event))
         {
             closeGame(event);
-            std::cout << "Check done: close game?" << std::endl;
         }
 
-        //checking for keypresses for direction change by snake
+        //Keyboard input check and snake movement
         if (event.type == sf::Event::KeyReleased)
         {
-            s.changeMoveDirection(event);
-            std::cout << "Check done: key pressed?" << std::endl;
-
+            snake.changeDirection(event);
         }
-        s.move();
+        snake.move();
         
-        //Collision check, resetting foods position and adding snakeSegment
-        if (s.getSnake().getGlobalBounds().intersects(f.getFood().getGlobalBounds()))
+        //Collision check with food and adding game progress
+        if (snake.isTouching(food.getShape()))
         {
-            f.setFoodPosition(getRandomCoordinates(GAME_WIDTH, GAME_HEIGHT, FOOD_SIZE));
-            s.setIngameSnakeSpeed(s.getIngameSpeed() + s.getSpeedModifier());
-            ss.addSnakeSegment();
-            std::cout << "Check done: collison checked?" << std::endl;
-
+            snake.increaseSpeed();
+            snake.addSegment();
+            food.changePosition();
         }
-        
-        //Updating position of segments
-        ss.updatePositions(s.getSnake());
-        std::cout << "Check done: updated segments?" << std::endl;
 
-        
-        //Check bounderies and restart snake progress
-        if (s.getPosition().x < 0.f || s.getPosition().x > GAME_WIDTH || s.getPosition().y < 0.f || s.getPosition().y > GAME_HEIGHT)
+        //Collision check with boundaries or itself and game progress resset
+        if (snake.isTouchingBoundaried())
         {
-            restartGame(s, f, ss);
-            std::cout << "Check done: restarted game?" << std::endl;
-
+            snake.reset();
+            food.changePosition();
         }
-        
-        //Renderring visuals
-        m_game.clear();
+
+        //Window render process
+        m_window.clear();
         if (m_isPlaying)
         {
-            /*for (const auto& segment : ss.getSegments())
+            for (const auto& segment : snake.getSegments())
             {
-                m_game.draw(segment);
-            }*/
-            m_game.draw(s.getSnake());
-            std::cout << "Check done: draw snake?" << std::endl;
-
-            m_game.draw(f.getFood());
-            std::cout << "Check done: draw food?" << std::endl;
-
+                m_window.draw(segment);
+            }
+            m_window.draw(food.getShape());
         }
-        m_game.display();
+        m_window.display();
     }
-}
-
-void Game::restartGame(Snake& s, Food& f, SnakeSegments& ss)
-{
-    s.resetProgress();
-    f.setFoodPosition(getRandomCoordinates(GAME_WIDTH, GAME_HEIGHT, FOOD_SIZE));
-    ss.resetProgress(s.getSnake());
 }
 
 void Game::closeGame(sf::Event event)
 {
-    if ((event.type == sf::Event::Closed) || ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Escape)))
+    if ((event.type == sf::Event::Closed) || 
+       ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Escape)))
     {
         m_isPlaying = false;
-        m_game.close();
+        m_window.close();
     }
 }
-
-
-
-
-
-//check if snake ate itself
-/*for (int i = 1; i < snakeSegments.size(); ++i)
-            {
-                if (snake.getGlobalBounds().intersects(snakeSegments[i].getGlobalBounds()))
-                {
-                    food.setPosition(getRandomCoordinates(gameWidth, gameHeight, foodSize));
-                    snakeIngameSpeed += 1.f;
-                    sf::RectangleShape snakeTail(snakeSize - sf::Vector2f(3.f, 3.f));
-                    snakeTail.setOutlineThickness(3.f);
-                    snakeTail.setOutlineColor(sf::Color(sf::Color::White));
-                    snakeTail.setFillColor(sf::Color::Green);
-                    snakeTail.setPosition(snakeSegments.back().getPosition() - snakeMovement * snakeSize.x);
-                    snakeSegments.push_back(snakeTail);
-                }
-            }*/

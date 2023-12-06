@@ -1,45 +1,57 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "Game.h"
 #include "Snake.h"
+#include "Food.h"
 
 Snake::Snake()
-	: m_snake(SNAKE_SIZE)
-	, m_ingameSpeed(SNAKE_DEFAULT_SPEED)
-    , m_speedModifier(5.f)
+    : m_size(sf::Vector2f(20.f, 20.f))
+    , m_shape(m_size)
+    , m_color(sf::Color::Green)
+    , m_defaultSpeed(4.0f / FPS_LIMIT)
+	, m_ingameSpeed(m_defaultSpeed)
+    , m_speedModifier(1.10f)
 	, m_movementDirection(sf::Vector2f(0.f, 0.f))
-	, m_position(sf::Vector2f(GAME_WIDTH/2.f, GAME_HEIGHT/2.f))
+    , m_segments()
 {
-    m_snake.setFillColor(SNAKE_FILL_COLOR);
+    m_shape.setFillColor(m_color);
+    m_shape.setPosition( RESOLUTION.x/ 2.f, RESOLUTION.y / 2.f);
+    m_segments.push_back(m_shape);
 }
 
 Snake::~Snake(){}
 
-void Snake::changeMoveDirection(sf::Event keyReleased)
+void Snake::changeDirection(sf::Event keyReleased)
 {
+    const sf::Vector2f up(0.f, -20.f);
+    const sf::Vector2f down(0.f, 20.f);
+    const sf::Vector2f left(-20.f, 0.f);
+    const sf::Vector2f right(20.f, 0.f);
+
     switch (keyReleased.key.code)
     {
     case sf::Keyboard::W:
-        if (m_movementDirection != sf::Vector2f(0.f, 20.f))
+        if (m_movementDirection != down)
         {
-            m_movementDirection = sf::Vector2f(0.f, -20.f);
+            m_movementDirection = up;
         }
         break;
     case sf::Keyboard::S:
-        if (m_movementDirection != sf::Vector2f(0.f, -20.f))
+        if (m_movementDirection != up)
         {
-            m_movementDirection = sf::Vector2f(0.f, 20.f);
+            m_movementDirection = down;
         }
         break;
     case sf::Keyboard::A:
-        if (m_movementDirection != sf::Vector2f(20.f, 0.f))
+        if (m_movementDirection != right)
         {
-            m_movementDirection = sf::Vector2f(-20.f, 0.f);
+            m_movementDirection = left;
         }
         break;
     case sf::Keyboard::D:
-        if (m_movementDirection != sf::Vector2f(-20.f, 0.f))
+        if (m_movementDirection != left)
         {
-            m_movementDirection = sf::Vector2f(20.f, 0.f);
+            m_movementDirection = right;
         }
         break;
     default:
@@ -50,36 +62,62 @@ void Snake::changeMoveDirection(sf::Event keyReleased)
 
 void Snake::move()
 {
-    m_snake.setPosition(m_snake.getPosition() + m_movementDirection * m_ingameSpeed * static_cast<float>(GAME_FPS_LIMIT));
+    if (m_segments.size() > 1)
+    {
+        for (int i = m_segments.size() - 1; i > 0; --i)
+        {
+            sf::Vector2f direction = m_segments[i - 1].getPosition() - m_segments[i].getPosition();
+            m_segments[i].setPosition(m_segments[i].getPosition() + direction * m_ingameSpeed);
+        }
+    }
+    m_segments.front().setPosition(m_segments.front().getPosition() + m_movementDirection * m_ingameSpeed);
 }
 
-void Snake::resetProgress()
+void Snake::reset()
 {
-    m_snake.setPosition(GAME_WIDTH / 2.f, GAME_HEIGHT / 2.f);
-    m_ingameSpeed = SNAKE_DEFAULT_SPEED;
+    m_segments.clear();
+    m_segments.push_back(m_shape);
+    m_shape.setPosition(RESOLUTION.x / 2.f, RESOLUTION.y / 2.f);
+    m_ingameSpeed = m_defaultSpeed;
 }
 
-const sf::RectangleShape Snake::getSnake()
+void Snake::increaseSpeed()
 {
-    return m_snake;
+    m_ingameSpeed *= m_speedModifier;
 }
 
-const sf::Vector2f Snake::getPosition()
+void Snake::addSegment()
 {
-    return m_position;
+    sf::RectangleShape newSegment(m_size);
+    newSegment.setFillColor(m_color);
+    newSegment.setPosition(m_segments.back().getPosition() - m_movementDirection);
+    m_segments.push_back(newSegment);
 }
 
-const float Snake::getIngameSpeed()
+const bool Snake::isTouching(const sf::Shape& object)
 {
-    return m_ingameSpeed;
+    return m_segments.front().getGlobalBounds().intersects(object.getGlobalBounds());
 }
 
-const float Snake::getSpeedModifier()
+const bool Snake::isTouchingBoundaried()
 {
-    return m_speedModifier;
+    sf::Vector2f position = m_segments.front().getPosition();
+    if (position.x < 0.f || position.x > RESOLUTION.x || 
+        position.y < 0.f || position.y > RESOLUTION.y)
+    {
+        return true;
+    }
+    for (int i = 3; i < m_segments.size(); ++i)
+    {
+        if (m_segments.front().getGlobalBounds().intersects(m_segments[i].getGlobalBounds()))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
-void Snake::setIngameSnakeSpeed(float addedSpeed)
+const std::vector<sf::RectangleShape>& Snake::getSegments()
 {
-    m_ingameSpeed += addedSpeed;
+    return m_segments;
 }

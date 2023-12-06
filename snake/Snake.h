@@ -1,33 +1,32 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-const sf::Vector2f SNAKE_SIZE = sf::Vector2f(20.f, 20.f);
-const sf::Color SNAKE_FILL_COLOR = sf::Color::Green;
-const float SNAKE_DEFAULT_SPEED = 20.f;
-
 class Snake
 {
 public:
 	Snake();
 	~Snake();
 
-	void changeMoveDirection(sf::Event keyReleased);
+	void changeDirection(sf::Event keyReleased);
 	void move();
-	void resetProgress();
+	void reset();
+	void increaseSpeed();
+	void addSegment();
 
-	const sf::RectangleShape getSnake();
-	const sf::Vector2f getPosition();
-	const float getIngameSpeed();
-	const float getSpeedModifier();
+	const bool isTouching(const sf::Shape& food);
+	const bool isTouchingBoundaried();
 
-	void setIngameSnakeSpeed(float addedSpeed);
+	const std::vector<sf::RectangleShape>& getSegments();
 
 private:
-	sf::RectangleShape m_snake;
+	sf::Vector2f m_size;
+	sf::RectangleShape m_shape;
+	sf::Color m_color;
+	const float m_defaultSpeed;
 	float m_ingameSpeed;
 	float m_speedModifier;
 	sf::Vector2f m_movementDirection;
-	sf::Vector2f m_position;
+	std::vector<sf::RectangleShape> m_segments;
 };
 
 #endif //SNAKE_H

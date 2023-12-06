@@ -1,2 +1,12 @@
 ﻿  Game.cpp
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,54): warning C4244: аргумент: преобразование "const T" в "unsigned int", возможна потеря данных
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,54): warning C4244:         with
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,54): warning C4244:         [
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,54): warning C4244:             T=float
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,54): warning C4244:         ]
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,40): warning C4244: аргумент: преобразование "const T" в "unsigned int", возможна потеря данных
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,40): warning C4244:         with
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,40): warning C4244:         [
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,40): warning C4244:             T=float
+C:\Users\gena_\source\repos\Projekte\snake\Game.cpp(8,40): warning C4244:         ]
   Snake.vcxproj -> C:\Users\gena_\source\repos\Projekte\snake\Snake\x64\Debug\Snake.exe

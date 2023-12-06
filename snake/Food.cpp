@@ -1,28 +1,40 @@
 #include <SFML/Graphics.hpp>
+#include <cstdlib>
+#include <ctime>
 #include "Game.h"
 #include "Food.h"
 
+static int generateRandomNumber(int max) {
+	return rand() % (max + 1);
+}
+
+static sf::Vector2f& getRandomCoordinates(const sf::Vector2f boundaries, const sf::Vector2f boundariesSizeStep) {
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+	sf::Vector2f position;
+	position.x = generateRandomNumber(static_cast<int>((boundaries.x - boundariesSizeStep.x) / boundariesSizeStep.x)) * boundariesSizeStep.x;
+	position.y = generateRandomNumber(static_cast<int>((boundaries.y - boundariesSizeStep.y) / boundariesSizeStep.y)) * boundariesSizeStep.y;
+	return position;
+}
 
 Food::Food()
-	: m_food(FOOD_SIZE)
-	, m_position(sf::Vector2f(GAME_WIDTH / 2.f, GAME_HEIGHT / 2.f))
+	: m_size(sf::Vector2f(20.f, 20.f))
+	, m_shape(m_size)
+	, m_color(sf::Color::Yellow)
 {
-	m_food.setFillColor(FOOD_FILL_COLOR);
+	m_shape.setFillColor(m_color);
+	changePosition();
 }
 
 Food::~Food() {}
 
-const sf::RectangleShape Food::getFood()
+void Food::changePosition()
 {
-	return m_food;
+	m_shape.setPosition(getRandomCoordinates(RESOLUTION, m_size));
 }
 
-const sf::Vector2f Food::getFoodPosition()
+const sf::RectangleShape& Food::getShape()
 {
-	return m_position;
+	return m_shape;
 }
 
-void Food::setFoodPosition(const sf::Vector2f destination)
-{
-	m_position = destination;
-}
