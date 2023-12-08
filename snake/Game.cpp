@@ -1,30 +1,50 @@
 #include <SFML/Graphics.hpp>
+#include "Render.h"
 #include "Game.h"
 #include "Snake.h"
 #include "Food.h"
 
 Game::Game()
-	: m_isPlaying(true)
-    , m_window(sf::VideoMode(RESOLUTION.x, RESOLUTION.y), 
-               "SNAKE", 
-               sf::Style::Titlebar | sf::Style::Resize | sf::Style::Close)
+    : m_isPlaying(false)
+    , m_render()
 {
-    m_window.setFramerateLimit(FPS_LIMIT);
     runGame();
 }
 
-Game::~Game()
-{
-}
+
+
+//eventhandler method
+//update == isUpdatable make discret + add deltaTime and use clock
+//render == draw == isDrawable
+
+
 
 void Game::runGame()
 {
     Snake snake;
     Food food;
-    sf::Event event;
+    std::vector<sf::Drawable> gameObjects;
+    gameObjects.push_back(food.getShape());
 
-    while (m_window.isOpen() && m_isPlaying)
+
+    m_isPlaying = true;
+    while (m_isPlaying)
     {
+        m_render.renderGame(gameObjects);
+
+        //event
+        //update
+        //render game
+
+        
+
+
+    }
+/*
+    while (m_isPlaying)
+    {
+        sf::Event event;
+
         //Closing input check
         while (m_window.pollEvent(event))
         {
@@ -65,6 +85,8 @@ void Game::runGame()
         }
         m_window.display();
     }
+*/
+
 }
 
 void Game::closeGame(sf::Event event)
@@ -73,6 +95,6 @@ void Game::closeGame(sf::Event event)
        ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Escape)))
     {
         m_isPlaying = false;
-        m_window.close();
+        //m_window.close();
     }
 }

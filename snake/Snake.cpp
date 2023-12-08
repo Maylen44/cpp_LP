@@ -9,17 +9,15 @@ Snake::Snake()
     , m_shape(m_size)
     , m_color(sf::Color::Green)
     , m_defaultSpeed(4.0f / FPS_LIMIT)
-	, m_ingameSpeed(m_defaultSpeed)
+    , m_ingameSpeed(m_defaultSpeed)
     , m_speedModifier(1.10f)
-	, m_movementDirection(sf::Vector2f(0.f, 0.f))
+    , m_movementDirection(sf::Vector2f(0.f, 0.f))
     , m_segments()
 {
     m_shape.setFillColor(m_color);
     m_shape.setPosition( RESOLUTION.x/ 2.f, RESOLUTION.y / 2.f);
     m_segments.push_back(m_shape);
 }
-
-Snake::~Snake(){}
 
 void Snake::changeDirection(sf::Event keyReleased)
 {
@@ -77,7 +75,7 @@ void Snake::reset()
 {
     m_segments.clear();
     m_segments.push_back(m_shape);
-    m_shape.setPosition(RESOLUTION.x / 2.f, RESOLUTION.y / 2.f);
+    m_shape.setPosition(RESOLUTION.x / 2.f, RESOLUTION.y / 2.f); //m_resetPosition
     m_ingameSpeed = m_defaultSpeed;
 }
 
@@ -121,3 +119,4 @@ const std::vector<sf::RectangleShape>& Snake::getSegments()
 {
     return m_segments;
 }
+

@@ -5,7 +5,7 @@ class Food
 {
 public:
 	Food();
-	~Food();
+	~Food() = default;
 
 	void changePosition();
 	const sf::RectangleShape& getShape();

@@ -4,11 +4,13 @@
 #include "Game.h"
 #include "Food.h"
 
-static int generateRandomNumber(int max) {
+static int generateRandomNumber(int max) 
+{
 	return rand() % (max + 1);
 }
 
-static sf::Vector2f& getRandomCoordinates(const sf::Vector2f boundaries, const sf::Vector2f boundariesSizeStep) {
+static sf::Vector2f& getRandomCoordinates(const sf::Vector2f boundaries, const sf::Vector2f boundariesSizeStep) 
+{
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
 	sf::Vector2f position;
@@ -26,7 +28,7 @@ Food::Food()
 	changePosition();
 }
 
-Food::~Food() {}
+
 
 void Food::changePosition()
 {

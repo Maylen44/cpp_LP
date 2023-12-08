@@ -5,18 +5,18 @@ class Snake
 {
 public:
 	Snake();
-	~Snake();
+	~Snake() = default;
 
-	void changeDirection(sf::Event keyReleased);
-	void move();
-	void reset();
-	void increaseSpeed();
-	void addSegment();
+	void changeDirection(sf::Event keyReleased); //enum Direction
+	void move(); //update
+	void reset(); //move to private
+	void increaseSpeed(); //move to private
+	void addSegment(); //move to private
 
-	const bool isTouching(const sf::Shape& food);
-	const bool isTouchingBoundaried();
+	const bool isTouching(const sf::Shape& food); //update and move to privet
+	const bool isTouchingBoundaried(); //update and move to privet
 
-	const std::vector<sf::RectangleShape>& getSegments();
+	const std::vector<sf::RectangleShape>& getSegments(); //delete
 
 private:
 	sf::Vector2f m_size;
