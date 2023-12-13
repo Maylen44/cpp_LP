@@ -1,19 +1,24 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+class Snake;
+class Food;
+
 class Render
 {
 public:
 	Render();
-	virtual ~Render();
+	~Render() = default;
 
-	void drawObject(const sf::Drawable& drawable);
-	void renderGame(const std::vector<sf::Drawable> gameObjects);
+	void const renderGame(Snake& snake, Food& food);
+	void const closeWindow();
 	
-protected:
+private:
 	const sf::VideoMode m_windowMode;
 	const std::string m_windowTitel;
 	const sf::Uint64 m_windowStyle;
+	
+protected:
 	sf::RenderWindow m_window;
 };
 
