@@ -25,3 +25,13 @@ std::vector<sf::RectangleShape>& Snake::getSegments()
 {
     return m_segments;
 }
+
+sf::Vector2f& Snake::getSize()
+{
+    return m_size;
+}
+
+sf::Color& Snake::getColor()
+{
+    return m_color;
+}

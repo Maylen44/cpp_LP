@@ -4,7 +4,7 @@
 class Snake;
 class Food;
 
-class Update : public Shape
+class Update
 {
 public:
 	Update();
@@ -16,9 +16,7 @@ public:
 
 private:
 	sf::Clock m_deltaTime;
-	const float m_defaultSpeed;
-	float m_ingameSpeed;
-	float m_speedModifier;
+	float m_timeProgressModifier;
 };
 
 #endif //UPDATE_H

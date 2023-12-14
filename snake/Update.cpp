@@ -1,64 +1,47 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <algorithm>
 #include "Game.h"
-#include "Shape.h"
-#include "Shape.h"
 #include "Snake.h"
 #include "Food.h"
 #include "Update.h"
 
-static void moveSnake(Snake& snake, sf::Vector2f& movementDirection, float ingameSpeed)
+static void moveSnake(Snake& snake, sf::Vector2f& movementDirection)
 {
-    if (snake.getSegments().size() > 1)
-    {
-        for (int i = snake.getSegments().size() - 1; i > 0; --i)
-        {
-            sf::Vector2f direction = snake.getSegments()[i - 1].getPosition() - snake.getSegments()[i].getPosition();
-            snake.getSegments()[i].setPosition(snake.getSegments()[i].getPosition() + direction * ingameSpeed);
-        }
-    }
-    snake.getSegments().front().setPosition(snake.getSegments().front().getPosition() + movementDirection * ingameSpeed);
+    std::vector<sf::RectangleShape>& segments = snake.getSegments();
+    segments.back().setPosition(segments.front().getPosition() + movementDirection);
+    std::rotate(segments.begin(), segments.end() - 1, segments.end());
 }
 
 Update::Update()
 	: m_deltaTime()
-    , m_defaultSpeed(20.0f)
-    , m_ingameSpeed(m_defaultSpeed)
-    , m_speedModifier(1.10f)
+    , m_timeProgressModifier(1.05f)
 {
 }
 
 void const Update::updateGame(Snake& snake, Food& food, sf::Vector2f& movementDirection)
 {
-    moveSnake(snake, movementDirection, m_ingameSpeed);
+    float speedFactor = m_timeProgressModifier * snake.getSegments().size() / 2;
+    sf::Time elapsed = m_deltaTime.getElapsedTime();
+
+    if (elapsed > sf::seconds(0.35f) / speedFactor)
+    {
+        moveSnake(snake, movementDirection);
+        m_deltaTime.restart();
+    }
 }
 
 void Update::resetGame(Snake& snake, Food& food)
 {
     snake.resetSnake();
-    m_ingameSpeed = m_defaultSpeed;
     food.resetFood();
 }
 
 void Update::progressGame(Snake& snake, Food& food, sf::Vector2f& movementDirection)
 {
-    m_ingameSpeed *= m_speedModifier;
-    sf::RectangleShape newSegment(m_size);
-    newSegment.setFillColor(m_color);
+    sf::RectangleShape newSegment(snake.getSize());
+    newSegment.setFillColor(snake.getColor());
     newSegment.setPosition(snake.getSegments().back().getPosition() - movementDirection);
     snake.getSegments().push_back(newSegment);
-
-}
-
-//Collision check with food and adding game progress
-if (snake.isTouching(food.getShape()))
-{
-    snake.increaseSpeed();
-    snake.addSegment();
-    food.changePosition();
-}
-
-
-void Snake::addSegment()
-{
-    
+    food.resetFood();
 }

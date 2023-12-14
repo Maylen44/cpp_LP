@@ -5,19 +5,6 @@
 #include "EventHandler.h"
 #include "Game.h"
 
-static const std::unordered_map<sf::Keyboard::Key, KeyInputs> keyMapping =
-{
-    {sf::Keyboard::Escape, ESC},
-    {sf::Keyboard::Up, UP},
-    {sf::Keyboard::W, W},
-    {sf::Keyboard::Left, LEFT},
-    {sf::Keyboard::A, A},
-    {sf::Keyboard::Down, DOWN},
-    {sf::Keyboard::S, S},
-    {sf::Keyboard::Right, RIGHT},
-    {sf::Keyboard::D, D}
-};
-
 static const sf::Vector2f up(0.f, -20.f);
 static const sf::Vector2f down(0.f, 20.f);
 static const sf::Vector2f left(-20.f, 0.f);
@@ -30,7 +17,7 @@ EventHandler::EventHandler()
 bool EventHandler::checkingClossingGame(sf::Event& event)
 {
     if ((event.type == sf::Event::Closed) ||
-        ((event.type == sf::Event::KeyReleased) && (event.key.code == ESC)))
+        ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Escape)))
     {
         return true;
     }
@@ -66,49 +53,49 @@ void const EventHandler::handleMovementInput(sf::Event& event)
     {
         switch (event.key.code)
         {
-        case UP:
+        case sf::Keyboard::Up:
             if (m_movementDirection != down)
             {
                 m_movementDirection = up;
             }
             break;
-        case W:
+        case sf::Keyboard::W:
             if (m_movementDirection != down)
             {
                 m_movementDirection = up;
             }
             break;
-        case DOWN:
+        case sf::Keyboard::Down:
             if (m_movementDirection != up)
             {
                 m_movementDirection = down;
             }
             break;
-        case S:
+        case sf::Keyboard::S:
             if (m_movementDirection != up)
             {
                 m_movementDirection = down;
             }
             break;
-        case LEFT:
+        case sf::Keyboard::Left:
             if (m_movementDirection != right)
             {
                 m_movementDirection = left;
             }
             break;
-        case A:
+        case sf::Keyboard::A:
             if (m_movementDirection != right)
             {
                 m_movementDirection = left;
             }
             break;
-        case RIGHT:
+        case sf::Keyboard::Right:
             if (m_movementDirection != left)
             {
                 m_movementDirection = right;
             }
             break;
-        case D:
+        case sf::Keyboard::D:
             if (m_movementDirection != left)
             {
                 m_movementDirection = right;

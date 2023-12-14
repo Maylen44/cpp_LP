@@ -1,18 +1,8 @@
 #ifndef EVENT_HANDLER_H
 #define EVENT_HANDLER_H
 
-enum KeyInputs
-{
-	ESC,
-	UP,
-	W,
-	LEFT,
-	A,
-	DOWN,
-	S,
-	RIGHT,
-	D
-};
+class Snake;
+class Food;
 
 class EventHandler
 {

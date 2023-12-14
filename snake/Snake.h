@@ -8,6 +8,8 @@ public:
 	~Snake() = default;
 	void resetSnake();
 	std::vector<sf::RectangleShape>& getSegments();
+	sf::Vector2f& getSize();
+	sf::Color& getColor();
 
 private:
 	sf::Vector2f m_size;

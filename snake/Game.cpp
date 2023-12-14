@@ -30,11 +30,11 @@ void Game::runGame()
             handleMovementInput(event);
             if (checkingCollisionWithBoundaries(snake))
             {
-                ///////////////////
+                resetGame(snake, food);
             }
             else if (checkingCollisionWithFood(snake, food))
             {
-                /////////////////////
+                progressGame(snake, food, m_movementDirection);
             }
             updateGame(snake, food, m_movementDirection);
         }

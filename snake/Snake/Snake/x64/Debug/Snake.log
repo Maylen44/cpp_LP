@@ -1,4 +1,4 @@
-﻿  Snake.cpp
+﻿  Update.cpp
 sfml-graphics-s-d.lib(Transformable.obj) : warning LNK4099: "" PDB не найден с "sfml-graphics-s-d.lib(Transformable.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-graphics-s-d.lib(Shape.obj) : warning LNK4099: "" PDB не найден с "sfml-graphics-s-d.lib(Shape.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-graphics-s-d.lib(RectangleShape.obj) : warning LNK4099: "" PDB не найден с "sfml-graphics-s-d.lib(RectangleShape.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
@@ -41,11 +41,11 @@ sfml-window-s-d.lib(Joystick.obj) : warning LNK4099: "" PDB не найден с
 sfml-window-s-d.lib(JoystickImpl.obj) : warning LNK4099: "" PDB не найден с "sfml-window-s-d.lib(JoystickImpl.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-window-s-d.lib(SensorImpl.obj) : warning LNK4099: "" PDB не найден с "sfml-window-s-d.lib(SensorImpl.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(String.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(String.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+sfml-system-s-d.lib(Time.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Time.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(Clock.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Clock.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(Mutex.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Mutex.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(Lock.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Lock.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(Err.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Err.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
-sfml-system-s-d.lib(Time.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Time.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(Sleep.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(Sleep.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(ThreadLocal.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(ThreadLocal.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
 sfml-system-s-d.lib(ClockImpl.obj) : warning LNK4099: "" PDB не найден с "sfml-system-s-d.lib(ClockImpl.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных

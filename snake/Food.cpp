@@ -1,6 +1,4 @@
 #include <SFML/Graphics.hpp>
-//#include <cstdlib>
-//#include <ctime>
 #include "Game.h"
 #include "Food.h"
 #include "Render.h"
@@ -26,7 +24,7 @@ Food::Food()
 	, m_color(sf::Color::Yellow)
 {
 	m_shape.setFillColor(m_color);
-	resetFood;
+	resetFood();
 }
 
 void Food::resetFood()
