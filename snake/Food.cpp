@@ -1,15 +1,14 @@
 #include <SFML/Graphics.hpp>
-#include <cstdlib>
-#include <ctime>
 #include "Game.h"
 #include "Food.h"
+#include "Render.h"
 
-static int generateRandomNumber(int max) 
+static int generateRandomNumber(int max)
 {
 	return rand() % (max + 1);
 }
 
-static sf::Vector2f& getRandomCoordinates(const sf::Vector2f boundaries, const sf::Vector2f boundariesSizeStep) 
+static sf::Vector2f& getRandomCoordinates(const sf::Vector2f boundaries, const sf::Vector2f boundariesSizeStep)
 {
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -25,12 +24,10 @@ Food::Food()
 	, m_color(sf::Color::Yellow)
 {
 	m_shape.setFillColor(m_color);
-	changePosition();
+	resetFood();
 }
 
-
-
-void Food::changePosition()
+void Food::resetFood()
 {
 	m_shape.setPosition(getRandomCoordinates(RESOLUTION, m_size));
 }
@@ -39,4 +36,3 @@ const sf::RectangleShape& Food::getShape()
 {
 	return m_shape;
 }
-

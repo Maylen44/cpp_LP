@@ -1,24 +1,23 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "EventHandler.h"
+#include "Update.h"
 #include "Render.h"
+#include "Snake.h"
+#include "Food.h"
 
-const sf::Vector2f RESOLUTION(800.f, 600.f); //make members
-const int FPS_LIMIT = 60; //make members
+const sf::Vector2f RESOLUTION(800.f, 600.f);
 
-class Render;
-
-class Game
+class Game : private Render, EventHandler, Update
 {
 public:
 	Game();
 	~Game() = default;
 	void runGame();
-	void closeGame(sf::Event event);
 
 private:
 	bool m_isPlaying;
-	Render m_render;
 	
 };
 

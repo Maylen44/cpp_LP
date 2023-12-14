@@ -1,29 +1,29 @@
 #include <SFML/Graphics.hpp>
+#include "Game.h"
+#include "Snake.h"
+#include "Food.h"
 #include "Render.h"
 
 Render::Render()
-	: m_windowMode(800, 600)
+	: m_windowMode(RESOLUTION.x, RESOLUTION.y)
 	, m_windowTitel("SNAKE")
 	, m_windowStyle(sf::Style::Titlebar | sf::Style::Resize | sf::Style::Close)
 	, m_window(m_windowMode, m_windowTitel, m_windowStyle)
 {
 }
 
-Render::~Render()
-{
-}
-
-void Render::drawObject(const sf::Drawable& drawable)
-{
-    m_window.draw(drawable);
-}
-
-void Render::renderGame(const std::vector<sf::Drawable> gameObjects)
+void const Render::renderGame(Snake& snake, Food& food)
 {
 	m_window.clear();
-	for (const auto& object : gameObjects)
+	for (const auto& object : snake.getSegments())
 	{
-		drawObject(object);
+		m_window.draw(object);
 	}
+	m_window.draw(food.getShape());
 	m_window.display();
+}
+
+void const Render::closeWindow()
+{
+	m_window.close();
 }
